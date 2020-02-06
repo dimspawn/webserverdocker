@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  webserver:
+    image: nginx:latest
+    volumes:
+      - ./resources/nginx/conf.d:/etc/nginx/conf.d
+      - ./resources/code:/var/www
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - php56fpm 
+  php56fpm:
+    build:
+      context: ./resources/php56fpm
+      dockerfile: Dockerfile
+    volumes:
+      - ./resources/code:/var/www
+    depends_on:
+      - database
+  database:
+    image: mysql:5.6
+    restart: always
+    environment:
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: root
+      MYSQL_PASSWORD: dimas
+      MYSQL_ROOT_PASSWORD: dimas
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    volumes:
+      - ./resources/mysql:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_PORT: 3306
+      PMA_HOST: database
+      PMA_USER: root
+      PMA_PASSWORD: dimas
+    ports:
+    - "8004:80"
+    restart: always
+    depends_on:
+    - database
