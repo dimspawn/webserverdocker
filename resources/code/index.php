@@ -37,6 +37,14 @@
         // Output the microseconds.
         echo $d->format('u');
         $conn->close();
+        //////////////////////////
+        $link = mysql_connect('database', 'root', 'dimas');
+        if (!$link) {
+            die('Could not connect: ' . mysql_error());
+        }
+        echo 'Connected successfully';
+        mysql_close($link);
+        echo $_SERVER['SERVER_NAME'];
         phpinfo();
     ?>
 </body>

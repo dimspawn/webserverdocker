@@ -5,11 +5,14 @@ services:
     image: nginx:latest
     volumes:
       - ./resources/nginx55/default.conf:/etc/nginx/conf.d/default.conf
-      - ./resources/code:/var/www
+      - ./resources/code/connection.ini:/var/www/connection.ini
+      - ./resources/code/aimsis:/var/www/aimsis
+      - ./resources/code/api-php:/var/www/api-php
     restart: unless-stopped
     tty: true
     ports:
-      - "80:80"
+      - "55:80"
+      - "54:81"
       - "443:443"
     depends_on:
       - php55fpm 
@@ -18,8 +21,11 @@ services:
       context: ./resources/php55fpm
       dockerfile: Dockerfile
     volumes:
-      - ./resources/code:/var/www
+      - ./resources/code/connection.ini:/var/www/connection.ini
+      - ./resources/code/aimsis:/var/www/aimsis
+      - ./resources/code/api-php:/var/www/api-php
       - ./resources/phpini55/php.ini:/usr/local/etc/php/php.ini
+    restart: always
     depends_on:
       - database
   database:
@@ -28,12 +34,12 @@ services:
     environment:
       MYSQL_DATABASE: mydb
       MYSQL_USER: root
-      MYSQL_PASSWORD: dimas
-      MYSQL_ROOT_PASSWORD: dimas
+      MYSQL_PASSWORD: aimsis
+      MYSQL_ROOT_PASSWORD: aimsis
     ports:
-      - 3306:3306
+      - 33062:3306
     expose:
-      - 3306
+      - 33062
     volumes:
       - ./resources/mysql55:/var/lib/mysql
   phpmyadmin:
@@ -42,7 +48,7 @@ services:
       PMA_PORT: 3306
       PMA_HOST: database
       PMA_USER: root
-      PMA_PASSWORD: dimas
+      PMA_PASSWORD: aimsis
     ports:
     - "8004:80"
     restart: always
