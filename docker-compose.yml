@@ -11,15 +11,15 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "55:80"
+      - "80:80"
       - "54:81"
       - "443:443"
     depends_on:
       - php55fpm 
   php55fpm:
     build:
-      context: ./resources/php55fpm
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: php55.Dockerfile
     volumes:
       - ./resources/code/connection.ini:/var/www/connection.ini
       - ./resources/code/aimsis:/var/www/aimsis
